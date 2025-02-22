@@ -21,7 +21,7 @@ headers = {
 
 def get_valid_location_ids():
     """Obtiene los IDs y valores para el campo Localidad"""
-    url = f"{BASE_LEAD_CUSTOMFIELDS_URL}/459956"  # ID del campo Localidad
+    url = f"{BASE_LEAD_CUSTOMFIELDS_URL}/459956" 
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         field_info = response.json()
@@ -30,7 +30,7 @@ def get_valid_location_ids():
 
 def get_valid_shift_ids():
     """Obtiene los IDs y valores para el campo Turnos"""
-    url = f"{BASE_LEAD_CUSTOMFIELDS_URL}/460300"  # ID del campo Turnos
+    url = f"{BASE_LEAD_CUSTOMFIELDS_URL}/460300"
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         field_info = response.json()
@@ -39,7 +39,7 @@ def get_valid_shift_ids():
 
 def get_valid_person_type_ids():
     """Obtiene los IDs y valores para el campo Tipo de Persona"""
-    url = f"{BASE_CONTACT_CUSTOMFIELDS_URL}/459358"  # ID del campo Tipo de Persona
+    url = f"{BASE_CONTACT_CUSTOMFIELDS_URL}/459358"
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         field_info = response.json()
@@ -135,7 +135,7 @@ def create_lead_with_contact(data):
         "_embedded": {
             "contacts": [contact_data]
         },
-        "pipeline_id": 10588331
+        "pipeline_id": int(data['pipeline'])
     }
 
     # Crear el lead
