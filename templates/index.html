@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro de Leads</title>
-  <!-- Agregar Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -27,16 +26,125 @@
       padding: 20px;
       border-radius: 10px;
     }
+
+    #mainForm {
+      display: none;
+    }
+
+    .config-info {
+      background-color: transparent;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      width: 60%;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 768px) {
+      .config-info {
+        width: 100%;
+        /* En pantallas más pequeñas (móviles), el card ocupará el 100% del ancho */
+      }
+    }
+
+    .config-item {
+      display: flex;
+      justify-content: left;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .config-label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .phone-prefix {
+      background-color: #e9ecef;
+      border: 1px solid #ced4da;
+      border-right: none;
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.25rem 0 0 0.25rem;
+    }
+
+    .phone-input {
+      border-left: none;
+      border-radius: 0 0.25rem 0.25rem 0;
+    }
+
+    .phone-group {
+      display: flex;
+      align-items: stretch;
+    }
   </style>
 </head>
 
 <body>
-  <div class="container mt-5">
+  <!-- Modal Inicial -->
+  <div class="modal fade" id="initialSetupModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Ingrese sus datos</h5>
+        </div>
+        <div class="modal-body">
+          <form id="setupForm">
+            <div class="mb-3">
+              <label for="modalRegistrarName" class="form-label">Nombre del Promotor</label>
+              <input type="text" class="form-control" id="modalRegistrarName" required>
+            </div>
+            <div class="mb-3">
+              <label for="modalLocationSelect" class="form-label">Orbpoint</label>
+              <select class="form-select" id="modalLocationSelect" required>
+                <option value="">Seleccione un orbpoint</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="modalShiftSelect" class="form-label">Bloque de Trabajo</label>
+              <select class="form-select" id="modalShiftSelect" required>
+                <option value="">Seleccione un turno</option>
+              </select>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-dark"><b>GUARDAR CONFIGURACIÓN</b></button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario Principal -->
+  <div class="container mt-5" id="mainForm">
     <div class="card">
       <div class="header text-center mt-2">
         <h2><b>REGISTRO DE NUEVO LEAD</b></h2>
       </div>
       <div class="card-body">
+        <!-- Información de configuración -->
+        <div class="config-info">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0"><b>Datos del Promotor</b></h5>
+            <button class="btn btn-sm btn-dark" id="changeConfigBtn">
+              <b>CAMBIAR</b>
+            </button>
+          </div>
+          <div class="config-item">
+            <span class="config-label">Promotor:</span>
+            <span class="config-value" id="displayRegistrarName"></span>
+          </div>
+          <div class="config-item">
+            <span class="config-label">Orbpoint:</span>
+            <span class="config-value" id="displayLocation"></span>
+          </div>
+          <div class="config-item">
+            <span class="config-label">Bloque de Trabajo:</span>
+            <span class="config-value" id="displayShift"></span>
+          </div>
+        </div>
+
         <form id="leadForm">
           <div class="row mb-3">
             <div class="col-md-6">
@@ -47,46 +155,29 @@
               <label for="personTypeSelect" class="form-label">Buyer Persona</label>
               <select class="form-select" id="personTypeSelect" required>
                 <option value="">Seleccione un tipo</option>
-                <!-- Opciones cargadas dinámicamente -->
               </select>
             </div>
           </div>
 
           <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label for="contactPhone" class="form-label">Número de Teléfono</label>
-              <input type="text" class="form-control" id="contactPhone" required>
+              <div class="phone-group">
+                <span class="phone-prefix">+51</span>
+                <input type="text" class="form-control phone-input" id="contactPhone" maxlength="9" required>
+              </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label for="contactEmail" class="form-label">Correo Electrónico (Opcional)</label>
               <input type="email" class="form-control" id="contactEmail">
             </div>
-          </div>
-          <hr>
-          <div class="row mb-3">
-            <div class="col-md-12">
-              <label for="registrarName" class="form-label">Nombre del Promotor</label>
-              <input type="text" class="form-control" id="registrarName" required>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="shiftSelect" class="form-label">Bloque de Trabajo</label>
-              <select class="form-select" id="shiftSelect" required>
-                <option value="">Seleccione un turno</option>
-                <!-- Opciones cargadas dinámicamente -->
+            <div class="col-md-4">
+              <label for="etapaSelect" class="form-label">Etapa</label>
+              <select class="form-select" id="etapaSelect" required>
+                <option value="10599827">Descubrimiento</option>
+                <option value="10599811">Registrados</option>
               </select>
             </div>
-
-            <div class="col-md-6">
-              <label for="locationSelect" class="form-label">Orbpoint</label>
-              <select class="form-select" id="locationSelect" required>
-                <option value="">Seleccione un orbpoint</option>
-                <!-- Opciones cargadas dinámicamente -->
-              </select>
-            </div>
-
           </div>
 
           <div class="text-center mt-4">
@@ -99,165 +190,179 @@
     </div>
   </div>
 
-
   <script>
     $(document).ready(function () {
-      // Función para mostrar datos de depuración
-      /*function displayDebugData(title, data) {
-        let currentContent = $('#apiDataDisplay').html();
-        $('#apiDataDisplay').html(currentContent + `<strong>${title}:</strong>\n${JSON.stringify(data, null, 2)}\n\n`);
-      }*/
+      // Variables para almacenar las opciones
+      let locationOptions = [];
+      let shiftOptions = [];
 
-      // Función para obtener y cargar las opciones de los campos select
-      function loadSelectOptions() {
-        // Cargar opciones de Localidad
-        $.get("/get_location_options", function (data) {
-          //displayDebugData('Datos de localidades recibidos', data);
+      // Función para cargar datos guardados
+      function loadSavedData() {
+        const savedData = JSON.parse(localStorage.getItem('leadFormConfig') || '{}');
+        return {
+          registrarName: savedData.registrarName || '',
+          locationId: savedData.locationId || '',
+          shiftId: savedData.shiftId || ''
+        };
+      }
 
-          let locationSelect = $('#locationSelect');
-          locationSelect.find('option:not(:first)').remove(); // Mantener solo la primera opción
+      // Función para guardar datos en localStorage
+      function saveFormConfig(data) {
+        localStorage.setItem('leadFormConfig', JSON.stringify(data));
+      }
 
-          if (data.locations && data.locations.length > 0) {
-            // Verifica si es un array de objetos con id/value o solo array de ids
-            if (typeof data.locations[0] === 'object' && data.locations[0].hasOwnProperty('id')) {
-              // Formato correcto {id: xxx, value: xxx}
-              data.locations.forEach(function (location) {
-                locationSelect.append(`<option value="${location.id}">${location.value}</option>`);
-              });
-            } else {
-              // Solo IDs, usar ID como texto también
-              data.locations.forEach(function (locationId) {
-                locationSelect.append(`<option value="${locationId}">ID: ${locationId}</option>`);
-              });
-            }
-          }
-        }).fail(function (xhr, status, error) {
-          //displayDebugData('Error al cargar localidades', { status: status, error: error });
-        });
+      // Función para actualizar la visualización de los datos de configuración
+      function updateConfigDisplay(data) {
+        $('#displayRegistrarName').text(data.registrarName);
 
-        // Cargar opciones de Turnos
-        $.get("/get_shift_options", function (data) {
-          //displayDebugData('Datos de turnos recibidos', data);
+        const locationObj = locationOptions.find(loc =>
+          (loc.id || loc) == data.locationId
+        );
+        $('#displayLocation').text(locationObj ? (locationObj.value || `ID: ${locationObj}`) : data.locationId);
 
-          let shiftSelect = $('#shiftSelect');
-          shiftSelect.find('option:not(:first)').remove(); // Mantener solo la primera opción
+        const shiftObj = shiftOptions.find(shift =>
+          (shift.id || shift) == data.shiftId
+        );
+        $('#displayShift').text(shiftObj ? (shiftObj.value || `ID: ${shiftObj}`) : data.shiftId);
+      }
 
-          if (data.shifts && data.shifts.length > 0) {
-            // Verifica si es un array de objetos con id/value o solo array de ids
-            if (typeof data.shifts[0] === 'object' && data.shifts[0].hasOwnProperty('id')) {
-              // Formato correcto {id: xxx, value: xxx}
-              data.shifts.forEach(function (shift) {
-                shiftSelect.append(`<option value="${shift.id}">${shift.value}</option>`);
-              });
-            } else {
-              // Solo IDs, usar ID como texto también
-              data.shifts.forEach(function (shiftId) {
-                shiftSelect.append(`<option value="${shiftId}">ID: ${shiftId}</option>`);
-              });
-            }
-          }
-        }).fail(function (xhr, status, error) {
-          //displayDebugData('Error al cargar turnos', { status: status, error: error });
-        });
+      // Función para cargar opciones en los selects
+      async function loadSelectOptions() {
+        try {
+          // Cargar opciones de Localidad
+          const locationResponse = await $.get("/get_location_options");
+          locationOptions = locationResponse.locations || [];
+          populateSelect('#modalLocationSelect', locationOptions);
 
-        // Cargar opciones de Tipo de Persona
-        $.get("/get_person_type_options", function (data) {
-          //displayDebugData('Datos de tipos de persona recibidos', data);
+          // Cargar opciones de Turnos
+          const shiftResponse = await $.get("/get_shift_options");
+          shiftOptions = shiftResponse.shifts || [];
+          populateSelect('#modalShiftSelect', shiftOptions);
 
-          let personTypeSelect = $('#personTypeSelect');
-          personTypeSelect.find('option:not(:first)').remove(); // Mantener solo la primera opción
+          // Cargar opciones de Tipo de Persona
+          const personTypeResponse = await $.get("/get_person_type_options");
+          const personTypes = personTypeResponse.person_types || [];
+          populateSelect('#personTypeSelect', personTypes);
 
-          if (data.person_types && data.person_types.length > 0) {
-            // Verifica si es un array de objetos con id/value o solo array de ids
-            if (typeof data.person_types[0] === 'object' && data.person_types[0].hasOwnProperty('id')) {
-              // Formato correcto {id: xxx, value: xxx}
-              data.person_types.forEach(function (personType) {
-                personTypeSelect.append(`<option value="${personType.id}">${personType.value}</option>`);
-              });
-            } else {
-              // Solo IDs, usar ID como texto también
-              data.person_types.forEach(function (personTypeId) {
-                personTypeSelect.append(`<option value="${personTypeId}">ID: ${personTypeId}</option>`);
-              });
-            }
-          }
-        }).fail(function (xhr, status, error) {
-          //displayDebugData('Error al cargar tipos de persona', { status: status, error: error });
+        } catch (error) {
+          console.error('Error loading options:', error);
+        }
+      }
+
+      // Función auxiliar para popular selects
+      function populateSelect(selectId, options) {
+        const select = $(selectId);
+        select.find('option:not(:first)').remove();
+
+        options.forEach(option => {
+          const value = option.id || option;
+          const text = option.value || `ID: ${option}`;
+          select.append(`<option value="${value}">${text}</option>`);
         });
       }
 
-      // Cargar opciones al cargar la página
-      loadSelectOptions();
+      // Inicialización
+      async function initialize() {
+        await loadSelectOptions();
+        const savedData = loadSavedData();
 
-      // Enviar el formulario
+        if (savedData.registrarName && savedData.locationId && savedData.shiftId) {
+          // Si hay datos guardados, actualizar la visualización
+          updateConfigDisplay(savedData);
+          $('#mainForm').show();
+        } else {
+          // Si no hay datos guardados, mostrar el modal
+          const modal = new bootstrap.Modal('#initialSetupModal');
+          modal.show();
+        }
+      }
+
+      // Event handler para el botón de cambiar configuración
+      $('#changeConfigBtn').on('click', function () {
+        const savedData = loadSavedData();
+        $('#modalRegistrarName').val(savedData.registrarName);
+        $('#modalLocationSelect').val(savedData.locationId);
+        $('#modalShiftSelect').val(savedData.shiftId);
+
+        const modal = new bootstrap.Modal('#initialSetupModal');
+        modal.show();
+      });
+
+      // Manejar el envío del formulario de configuración inicial
+      $('#setupForm').on('submit', function (e) {
+        e.preventDefault();
+
+        const configData = {
+          registrarName: $('#modalRegistrarName').val(),
+          locationId: $('#modalLocationSelect').val(),
+          shiftId: $('#modalShiftSelect').val()
+        };
+
+        saveFormConfig(configData);
+        updateConfigDisplay(configData);
+
+        // Cerrar modal y mostrar formulario principal
+        bootstrap.Modal.getInstance('#initialSetupModal').hide();
+        $('#mainForm').show();
+      });
+
+      // Validación del teléfono para que solo acepte números
+      $('#contactPhone').on('input', function () {
+        this.value = this.value.replace(/[^0-9]/g, '');
+      });
+
+      // Manejar el envío del formulario principal
       $('#leadForm').on('submit', function (e) {
         e.preventDefault();
 
-        // Validar que se hayan seleccionado opciones
-        if (!$('#locationSelect').val() || !$('#shiftSelect').val() || !$('#personTypeSelect').val()) {
-          $('#responseMessage').html('<div class="alert alert-warning">Por favor seleccione todas las opciones requeridas.</div>');
-          return;
-        }
-
         let currentDate = new Date();
+        let isoFormattedDate = new Date(currentDate.setHours(0, 0, 0, 0)).toISOString().slice(0, 19) + "+00:00";
 
-        // Formatear la fecha en formato 'YYYY-MM-DD'
-        let creationDate = currentDate.getFullYear() + '-'
-          + String(currentDate.getMonth() + 1).padStart(2, '0') + '-'
-          + String(currentDate.getDate()).padStart(2, '0');
-
-        console.log(creationDate);
-        // Crear objeto Date con la fecha y hora ficticia 00:00:00
-        let dateObject = new Date(creationDate + "T00:00:00Z");  // Usamos Z para UTC
-
-        // Formatear la fecha en formato Y-m-d\TH:i:s+00:00
-        let isoFormattedDate = dateObject.toISOString().slice(0, 19) + "+00:00"; // Cortar la parte de milisegundos y agregar la zona horaria
-
-
+        const savedData = loadSavedData();
         let leadData = {
           contact_name: $('#contactName').val(),
-          contact_phone: $('#contactPhone').val(),
-          location_id: $('#locationSelect').val(),
-          registrar_name: $('#registrarName').val(),
-          shift_id: $('#shiftSelect').val(),
+          contact_phone: '+51' + $('#contactPhone').val(),
+          pipeline: $('#etapaSelect').val(),
+          location_id: savedData.locationId,
+          registrar_name: savedData.registrarName,
+          shift_id: savedData.shiftId,
           person_type_id: $('#personTypeSelect').val(),
           contact_email: $('#contactEmail').val(),
           creation_date: isoFormattedDate
         };
 
-        //displayDebugData('Datos a enviar', leadData);
-
-        // Mostrar mensaje de carga
         $('#responseMessage').html('<div class="alert alert-info">Enviando datos, por favor espere...</div>');
 
-        // Enviar la solicitud
         $.ajax({
           url: "/submit_lead",
           type: "POST",
           contentType: "application/json",
           data: JSON.stringify(leadData),
           success: function (response) {
-            //displayDebugData('Respuesta exitosa', response);
             if (response.success) {
               $('#responseMessage').html('<div class="alert alert-success">Lead registrado correctamente.</div>');
-              // Limpiar el formulario después de un registro exitoso
-              $('#leadForm')[0].reset();
+              $('#contactName').val('');
+              $('#contactPhone').val('');
+              $('#etapaSelect').val(),
+              $('#contactEmail').val('');
+              $('#personTypeSelect').val('');
             } else {
               $('#responseMessage').html(`<div class="alert alert-danger">Error al registrar el lead: ${response.message}</div>`);
             }
           },
-          error: function (xhr, status, error) {
+          error: function (xhr) {
             try {
               let errorObj = JSON.parse(xhr.responseText);
-              //displayDebugData('Respuesta de error', errorObj);
               $('#responseMessage').html(`<div class="alert alert-danger">Error al registrar el lead: ${errorObj.message}</div>`);
             } catch (e) {
-              //displayDebugData('Error al procesar respuesta', { status: status, error: error, responseText: xhr.responseText });
-              $('#responseMessage').html('<div class="alert alert-danger">Error al registrar el lead. Revise la información de depuración.</div>');
+              $('#responseMessage').html('<div class="alert alert-danger">Error al registrar el lead.</div>');
             }
           }
         });
       });
+
+      // Iniciar la aplicación
+      initialize();
     });
   </script>
 </body>
